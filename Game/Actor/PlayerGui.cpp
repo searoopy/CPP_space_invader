@@ -68,6 +68,13 @@ void PlayerGui::Draw()
 
 
 	Renderer::Get().Submit(displayStr, position, color, sortingorder);
+
+
+
+	Vector2 vec2(position.x, 0);
+	str_score = std::to_string(score);
+	Renderer::Get().Submit(str_score.c_str(), vec2, Color::Yellow,  sortingorder);
+	
 }
 
 void PlayerGui::Tick(float deltatime)

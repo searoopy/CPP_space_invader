@@ -6,6 +6,8 @@
 #include "utill/utill.h"
 #include "Render/Renderer.h"
 #include "PlayerGui.h"
+#include "Level/TitleLevel.h"
+#include "Game/Game.h"
 
 Player::Player()
 	: super(" ", Vector2::Zero, Color::Green),
@@ -131,6 +133,14 @@ Player::~Player()
 	SafeDeleteArray(image8);
 }
 
+void Player::InitData()
+{
+	position.x = startPos.x;
+	position.y = startPos.y;
+	bulletCnt = 5;
+	PlayerGui::Get().SetBullet(bulletCnt);
+}
+
 
 
 void Player::Tick(float deltaTime)
@@ -139,7 +149,12 @@ void Player::Tick(float deltaTime)
 
 	if (Input::Get().GetKeyKey(VK_ESCAPE))
 	{
-		Engine::Get().QuitEngine();
+		//Engine::Get().QuitEngine();
+
+		
+		Game::Get().ToggleMenu();
+		return;
+
 	}
 
 
@@ -152,12 +167,12 @@ void Player::Tick(float deltaTime)
 	//위 아래...전진 후진
 	//moveSpeed = 0;
 	if (moveSpeed > 0)
-		moveSpeed -= moveSlideSpeed;
+		moveSpeed -= moveSlideSpeed * deltaTime;;
 
 	if (Input::Get().GetKeyKey(VK_UP))
 	{
 
-		moveSpeed = moveSetSpeed;
+		moveSpeed = moveSetSpeed * deltaTime;;
 	}
 	if (Input::Get().GetKeyKey(VK_DOWN))
 	{
@@ -173,13 +188,13 @@ void Player::Tick(float deltaTime)
 	{
 		//MoveLeft();
 
-		direction += (rotSpeed);
+		direction += (rotSpeed)*deltaTime;;
 	}
 	if (Input::Get().GetKeyKey(VK_LEFT))
 	{
 		//MoveRight();
 
-		direction -= (rotSpeed);
+		direction -= (rotSpeed)*deltaTime;
 	}
 
 	direction = Utill::WrapAngle(direction);
@@ -365,14 +380,15 @@ void Player::MoveCheck()
 
 	}
 
-	if (my + height > height2)
+	// 아래로 나가는 중이면 위로 이동
+	if (my > height2)
 	{
-		my = 0;
-
+		my -= (height2 + height);
 	}
+	// 위로 나가는 중이면 아래로 이동
 	else if (my < -height)
 	{
-		my = height2- 1;
+		my += (height2 + height);
 	}
 
 }
@@ -430,4 +446,9 @@ void Player::AddBulletCnt(int val)
 	bulletCnt += val;
 	PlayerGui::Get().SetBullet(bulletCnt);
 
+}
+
+void Player::OnDestroy()
+{
+	Engine::Get().SetNewLevel(new TitleLevel());
 }

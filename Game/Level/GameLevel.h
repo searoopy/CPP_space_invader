@@ -4,6 +4,8 @@
 
 using namespace wanted;
 
+class Player;
+
 class GameLevel : public Level
 {
 	// RTTI µî·Ï.
@@ -23,7 +25,15 @@ public:
 
 	void ProcessCollisionPlayerAndEnemyBullet();
 
+	void ProcessCollisionPlayerAndEnemy();
+
+
+	virtual void Reset_Level() override;
+
+
 
 private:
+
+	Player* m_player  = nullptr;
 
 };

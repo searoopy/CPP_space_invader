@@ -2,7 +2,7 @@
 
 #include "Actor/Actor.h"
 #include "Common/RTTI.h"
-
+#include <string>
 using namespace wanted;
 
 class PlayerGui :public Actor
@@ -29,5 +29,13 @@ private:
 	int BulletCnt;
 
 	char* displayStr = nullptr;
+
+
+public:
+	int score;
+	std::string str_score;
+
+	inline void initScore() { score = 0; }
+	inline void addScore(int _val) { score += _val;  }
 };
 

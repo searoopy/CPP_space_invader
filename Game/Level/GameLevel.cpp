@@ -6,14 +6,16 @@
 #include "Actor/Enemy.h"
 #include "Actor/PlayerGui.h"
 #include "Engine/Engine.h"
+#include "Game/Game.h"
+#include "Actor/BulletItem.h"
 
 GameLevel::GameLevel()
 {
 	// Player 액터 추가.
-	Player* p = new Player();
-	AddNewActor(p);
-	AddNewActor(new EnemySpawner());
+	m_player = new Player();
+	AddNewActor(m_player);
 
+	AddNewActor(new EnemySpawner());
 	int _x = Engine::Get().GetWidth() - 10;
 	int _y = Engine::Get().GetHeight() - 1;
 	PlayerGui* pGUI = new PlayerGui(Vector2(_x, _y));
@@ -32,6 +34,106 @@ void GameLevel::Tick(float dtime)
 
 	ProcessCollisionPlayerBulletAndEnemy();
 	ProcessCollisionPlayerAndEnemyBullet();
+	ProcessCollisionPlayerAndEnemy();
+}
+
+void GameLevel::ProcessCollisionPlayerAndEnemy()
+{
+	Player* player = nullptr;
+	std::vector<Enemy*> enemies;
+	std::vector<BulletItem*> items;
+
+	for (Actor* const actor : actors)
+	{
+
+		if (!player && actor->IsTypeOf<Player>())
+		{
+			player = actor->As<Player>();
+			continue;
+		}
+
+		if (actor->IsTypeOf<Enemy>())
+		{
+			enemies.emplace_back(actor->As<Enemy>());
+			continue;
+		}
+
+		if (actor->IsTypeOf<BulletItem>())
+		{
+
+			items.emplace_back(actor->As<BulletItem>());
+		}
+
+	}
+
+	if (items.size() > 0)
+	{
+		for (Actor* const item : items)
+		{
+			if (item->TestIntersect(player))
+			{
+				BulletItem* pp = reinterpret_cast<BulletItem*>(item);
+				player->AddBulletCnt( pp->GetBulletCnt() );
+
+				item->Destroy();
+				
+			}
+		}
+	}
+
+
+	if (enemies.size() == 0 || !player)
+	{
+		return;
+	}
+
+
+	//충돌 판정
+	for (Actor* const enemy : enemies)
+	{
+		if (enemy->TestIntersect(player))
+		{
+			//player->Destroy();
+			//enemy->OnDamaged();
+
+			Game::Get().ToggleMenu();
+
+
+			break;
+		}
+	}
+
+}
+
+void GameLevel::Reset_Level()
+{
+
+	std::vector<Enemy*> enemies;
+
+
+	for (Actor* const actor : actors)
+	{
+
+
+
+		if (actor->IsTypeOf<Enemy>())
+		{
+			enemies.emplace_back(actor->As<Enemy>());
+
+		}
+
+	}
+
+	for (Actor* const enemy : enemies)
+	{
+		enemy->Destroy_only();
+	}
+
+
+	if (m_player)
+		m_player->InitData();
+	PlayerGui::Get().initScore();
+
 }
 
 
@@ -71,6 +173,8 @@ void GameLevel::ProcessCollisionPlayerBulletAndEnemy()
 			{
 				enemy->Destroy();
 				bullet->Destroy();
+
+				PlayerGui::Get().addScore(1);
 
 				continue;
 			}

@@ -13,7 +13,7 @@ namespace wanted
 	Actor::Actor(const char* image ,
 		const Vector2& position,
 		Color color)
-		: position(position), color(color), startPos(position)
+		: position(position), color(color), startPos(position), mx(position.x), my(position.y)
 	{
 
 		size_t length = strlen(image) + 1;
@@ -23,7 +23,7 @@ namespace wanted
 
 		// 문자열 길이.
 		int count = 0;
-		for (int i = 0; i < length - 1; ++i) {
+		for (int i = 0; i < length - 1; ++i) { 
 			if (this->image[i] == '\n') {
 				count++;
 			}
@@ -56,6 +56,8 @@ namespace wanted
 
 		width = max_len;
 		height = count+1;
+
+		radius = int( ((width/2) + (height/2)) / 2);
 	}
 
 	Actor::~Actor()
@@ -87,6 +89,13 @@ namespace wanted
 		OnDestroy();
 	}
 
+
+	void Actor::Destroy_only()
+	{
+		destroyRequested = true;
+		//OnDestroy();
+	}
+
 	void Actor::OnDestroy()
 	{
 	}
@@ -100,18 +109,19 @@ namespace wanted
 	{
 		//aabb
 		//x좌표만 고려하면됨 y는 크기가 1이기 때문...
+		
 		int xMin = position.x;
-		int xMax = position.x + width - 1;
+		int xMax = position.x + width ;
 
 		int yMin = position.y;
-		int yMax = position.y + height - 1;
+		int yMax = position.y + height ;
 
 		//충돌을 비교할 다른액터의 x좌표 정보
 		int otherXMin = other->GetPosition().x;
-		int otherXMax = other->position.x + other->width - 1;
+		int otherXMax = other->position.x + other->width ;
 
 		int otherYMin = other->GetPosition().y;
-		int otherYMax = other->position.y + other->height - 1;
+		int otherYMax = other->position.y + other->height  ;
 
 		//안겹치는지 조건 확인
 		if (otherXMin > xMax)
@@ -133,6 +143,26 @@ namespace wanted
 		}
 
 		return true;
+
+		
+
+		/*
+		float dx = (position.x + radius) - (other->GetPosition().x + other->radius);
+		float dy = (position.y - radius) - (other->GetPosition().y - other->radius);
+		//float dx = mx - other->mx;
+		//float dy = my - other->my;
+
+		// 2. 거리의 제곱 계산 (dx^2 + dy^2)
+		float distanceSquared = (dx * dx) + (dy * dy);
+		float radiusSum = radius + other->radius;
+		float radiusSumSquared = radiusSum * radiusSum;
+
+
+		return distanceSquared <= radiusSumSquared;
+
+		*/
+
+		
 		
 		//return position.y == other->position.y;
 	}

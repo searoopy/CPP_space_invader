@@ -26,6 +26,8 @@ public:
 	Player();
 	~Player();
 
+	void InitData();
+
 	inline void SetGUI(PlayerGui* pGui) {
 		mpGui = pGui;
 	}
@@ -50,11 +52,11 @@ private:
 	//발사 가능여부 확인 함수.
 	bool CanShot();
 
-
+public:
 	void SetBulletCnt(int val);
 	void AddBulletCnt(int val);
 
-
+	void OnDestroy() override;
 
 private:
 	PlayerGui* mpGui = nullptr;
@@ -70,15 +72,17 @@ private:
 	Timer timer;
 
 
-	const float moveSetSpeed = 10;
-	const float moveSlideSpeed = 0.01f;
+	const float moveSetSpeed = 1000;
+	const float moveSlideSpeed = 15.1f;
 
 	float moveSpeed = 0;
 	float direction = 0;
-	float rotSpeed = 5.5f;
+	float rotSpeed = 155.5f;
 
 	float mx;
 	float my;
+
+	char* image_cur = nullptr;
 
 	char* image1 = nullptr;
 	char* image2 = nullptr;
@@ -93,6 +97,8 @@ private:
 
 
 	int bulletCnt = 0;
+
+
 
 };
 

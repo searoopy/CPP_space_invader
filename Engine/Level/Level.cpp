@@ -109,6 +109,14 @@ namespace wanted
 
 	}
 
+
+
+	void Level::Reset_Level()
+	{
+
+
+	}
+
 	void Level::ProcessPendingActors()
 	{
 		for (int i = 0; i < static_cast<int>(actors.size()); )

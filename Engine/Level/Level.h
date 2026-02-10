@@ -29,6 +29,8 @@ namespace wanted
 
 		void ProcessPendingActors();
 
+		virtual void Reset_Level();
+
 	protected:
 		//액터 배열.
 		std::vector<Actor*> actors;

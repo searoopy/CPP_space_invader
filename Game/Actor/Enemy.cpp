@@ -69,8 +69,8 @@ Enemy::Enemy(const char* image, const Vector2& vec, int level)
 Enemy::~Enemy()
 {
 
-	enemyCnt -= 1;
 
+	enemyCnt -= 1;
 
 
 
@@ -172,6 +172,7 @@ void Enemy::OnDamaged()
 
 void Enemy::OnDestroy()
 {
+	
 
 	//ºÐ¿­..
 	if (level > 0)

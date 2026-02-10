@@ -3,6 +3,7 @@
 #include "Utill/Timer.h"
 #include "Utill/utill.h"
 #include "Level/GameLevel.h"
+#include "Actor/BulletItem.h"
 // 적 생성할 때 사용할 글자 값.
 // 여기에서 static은 private.
 //static const char* enemyType[] =
@@ -24,6 +25,7 @@ EnemySpawner::EnemySpawner()
 void EnemySpawner::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
+
 
 
 	timer.Tick(deltaTime);
@@ -57,6 +59,16 @@ void EnemySpawner::SpawnEnemy(float deltaTime)
 
 		GetOwner()->AddNewActor(new Enemy(enemyType[index], dist,index));
 	}
+
+
+	if (BulletItem::bulletItemCnt < 1)
+
+	{
+
+		GetOwner()->AddNewActor(new BulletItem("BB\nBB"));
+	}
+
+	//
 
 
 }

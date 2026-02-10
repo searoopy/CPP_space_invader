@@ -29,6 +29,7 @@ namespace wanted
 
 		//삭제 요청 함수
 		void Destroy();
+		void Destroy_only();
 
 		//삭제가 될떄 호출될 이벤트 함수
 		virtual void OnDestroy();
@@ -87,10 +88,13 @@ namespace wanted
 
 		int width = 0;
 		int height = 0;
+		float radius = 0;
 
 		Vector2 position;
 		Vector2 startPos;
 
+		float mx = 0;
+		float my = 0;
 	};
 
 }
